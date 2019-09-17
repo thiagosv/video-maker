@@ -3,11 +3,11 @@ const algorithmiaApiKey = require('../credentials/algorithmia.json').apiKey
 const sentenceBoundaryDetection = require('sbd')
 
 async function robot(content) {
-    await fetchContentFromWIkipedi(content)
+    await fetchContentFromWikipedia(content)
     sanitizeContent(content)
-    breakContentIntoSentences
+    breakContentIntoSentences(content)
 
-    async function fetchContentFromWIkipedi(content) {
+    async function fetchContentFromWikipedia(content) {
         const algorithmiaAuthenticated = algorithmia(algorithmiaApiKey)
         const wikipediaAlgorithm = algorithmiaAuthenticated.algo('web/WikipediaParser/0.1.2')
         const wikipediaResponse = await wikipediaAlgorithm.pipe(content.searchTerm)
@@ -39,7 +39,7 @@ async function robot(content) {
         return text.replace(/\((?:\([^()]*\)|[^()])*\)/gm, '').replace(/  /g, ' ')
     }
 
-    function sentenceBoundaryDetection(content) {
+    function breakContentIntoSentences(content) {
         content.sentences = []
 
         const sentences = sentenceBoundaryDetection.sentences(content.sourceContentSanitized)
